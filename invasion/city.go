@@ -24,7 +24,7 @@ type City struct {
 	Neighbors          []*City
 	NeighborDirections map[string]string // Maps the name of the neighbor to the cardinal direction
 	Destroyed          bool
-	// TODO: aliens "visiting" this city go here
+	Visitor            *Alien // nil if no alien is currently occupying this city
 }
 
 func (c *City) Format(w io.Writer) {

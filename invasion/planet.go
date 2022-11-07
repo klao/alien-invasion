@@ -11,7 +11,7 @@ type PreParsedPlanet = []PreParsedCity
 
 type Planet struct {
 	Cities []*City
-	// TODO: aliens go here
+	Aliens map[int]*Alien
 }
 
 func (p *Planet) Format(w io.Writer) {

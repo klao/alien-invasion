@@ -59,3 +59,17 @@ The assignment specifies that the simulation stops after every alien moves at le
 I will assume that this alien also "moves" in every round, just ends up in the same place where
 it started. This makes the end condition very simple: we just simulate for 10000 rounds or until
 every alien is dead.
+
+Question: how are aliens placed? Just randomly on any city? What if there is another alien there
+already? Or randomly "without replacement"? Then what if more aliens are requested than cities?
+My initial decision: place aliens "with replacement", that is randomly in any city. If there is
+another alien there then the city is destroyed then and there. If an alien descends on a destroyed
+city it dies immediately (radiation is too harsh.) This way we can simulate arbitrary number of
+aliens. (Otherwise we are limited to at most `2 * #cities` aliens.)
+
+# Events
+
+During the simulation various events can happen: aliens descend on cities, aliens move around,
+aliens fight and destroy the city they are in, etc. The assignment only asks us to print the events
+where a city is destroyed, but I'd prefer to handle it in a more general way (for easier testing
+and debugging, and just because it's more fun to have more descriptive events.)
