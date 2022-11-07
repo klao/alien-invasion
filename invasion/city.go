@@ -3,6 +3,7 @@ package invasion
 import (
 	"fmt"
 	"io"
+	"math/rand"
 	"strings"
 )
 
@@ -27,7 +28,7 @@ type City struct {
 }
 
 func (c *City) Format(w io.Writer) {
-	// TODO: trim destroyed neighbors
+	c.RemoveDestroyedNeighbors()
 	io.WriteString(w, c.Name)
 	for _, neighbor := range c.Neighbors {
 		io.WriteString(w, " ")
@@ -71,4 +72,39 @@ func PreParseCity(line string) (PreParsedCity, error) {
 			Connection{connParts[0], connParts[1]})
 	}
 	return preParsedCity, nil
+}
+
+func (c *City) RemoveDestroyedNeighbors() {
+	newNeighbors := make([]*City, 0, len(c.Neighbors))
+	for _, neighbor := range c.Neighbors {
+		if !neighbor.Destroyed {
+			newNeighbors = append(newNeighbors, neighbor)
+		}
+	}
+	c.Neighbors = newNeighbors
+}
+
+// Returns a neighbor uniformly at random.
+// Returns nil if there are no (remaining undestroyed) neighbors.
+func (c *City) RandomNeighbor() *City {
+	// We have to be careful here because the neighbors slice may still contain
+	// destroyed cities. We need remove them if we happen to pick one.
+	for len(c.Neighbors) > 0 {
+		i := rand.Intn(len(c.Neighbors))
+		neighbor := c.Neighbors[i]
+		if neighbor.Destroyed {
+			// Remove the destroyed neighbor
+			//
+			// This is inefficient, but we assume that the number of neighbors is small.
+			// To make this more efficient we could use the O(1) trick of swapping the
+			// last element with the element we want to remove and then truncating the
+			// slice. This would modify the order of the neighbors. If the order is important
+			// we could use a different data structure, like a map or a linked list.
+			c.Neighbors = append(c.Neighbors[:i], c.Neighbors[i+1:]...)
+			continue
+		} else {
+			return neighbor
+		}
+	}
+	return nil
 }

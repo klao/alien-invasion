@@ -22,6 +22,10 @@ func TestCityToString(t *testing.T) {
 	}
 	require.Equal(t, "A north=B east=C", city.ToString())
 
+	// Test for destroyed neighbors
+	city.Neighbors[0].Destroyed = true
+	require.Equal(t, "A east=C", city.ToString())
+
 	// No superfluous spaces at the end, even if there are no neighbors
 	city.Neighbors = nil
 	require.Equal(t, "A", city.ToString())
