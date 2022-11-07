@@ -36,6 +36,7 @@ func TestMoveAlien(t *testing.T) {
 
 	alien = &invasion.Alien{Id: 0, City: planet.Cities[0]}
 	planet.Aliens[0] = alien
+	planet.Cities[0].Visitor = alien
 
 	sim = NewSimulation(planet)
 	log = invasion.EventCollector{}
@@ -45,6 +46,7 @@ func TestMoveAlien(t *testing.T) {
 	require.Equal(t, "alien 1 moves from A to B", log.Events[0].String())
 	require.Equal(t, planet.Cities[1], alien.City)
 	require.Equal(t, alien, planet.Cities[1].Visitor)
+	require.Nil(t, planet.Cities[0].Visitor)
 }
 
 func TestPlaceAlien(t *testing.T) {

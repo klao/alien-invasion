@@ -29,6 +29,7 @@ func (s *Simulation) MoveAlien(alien *Alien, log EventLogger) {
 		return
 	}
 
+	oldCity.Visitor = nil
 	log.LogEvent(&AlienMoveEvent{alien.Name(), oldCity.Name, newCity.Name})
 	s.moveAlienToCity(alien, newCity, log)
 }
