@@ -3,6 +3,19 @@
 This repository contains my (Mihaly Barasz) solution for the "Alien Invasion" interview
 assignment from Ignite / Gno / NewTendermint.
 
+## Running the program
+
+You can run the main executable as follows:
+
+```
+go run ./cmd/simulate examples/assignment 4
+```
+
+To see only the city destruction events (as described in the assignment) add a `-log_cities_only`
+flag.
+
+Run the program without argument to see all available flags.
+
 ## Assumptions
 
 - City names do not contain spaces (or any other whitespace) or `=` signs. Any other Unicode
