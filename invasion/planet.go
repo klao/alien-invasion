@@ -16,6 +16,9 @@ type Planet struct {
 
 func (p *Planet) Format(w io.Writer) {
 	for _, city := range p.Cities {
+		if city.Destroyed {
+			continue
+		}
 		city.Format(w)
 		io.WriteString(w, "\n")
 	}

@@ -43,3 +43,9 @@ func TestPreParsePlanet(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, preParsedPlanet1, preParsedPlanet)
 }
+
+func TestFormatRemovesDestroyed(t *testing.T) {
+	planet := invasion.PlanetFromPreParsedPlanet(preParsedPlanet1)
+	planet.Cities[0].Destroyed = true
+	require.Equal(t, "B\nC\n", planet.ToString())
+}
