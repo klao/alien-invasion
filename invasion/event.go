@@ -26,6 +26,15 @@ func (c *EventCollector) LogEvent(event Event) {
 	c.Events = append(c.Events, event)
 }
 
+type OfficialLogger struct{}
+
+func (l *OfficialLogger) LogEvent(event Event) {
+	_, ok := event.(*CityDestroyedEvent)
+	if ok {
+		println(event.String())
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Various events
 

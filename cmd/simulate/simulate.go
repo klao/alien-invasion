@@ -16,6 +16,7 @@ const numberOfRounds = 100
 const usageString = "Usage: simulate [flags] <map file> <number of aliens>\n\n"
 
 var alienOrderRandom = flag.Bool("order_random", false, "Order of alien moves in each round is random")
+var logCitiesOnly = flag.Bool("log_cities_only", false, "Only log city destruction events")
 
 func init() {
 	flag.Usage = func() {
@@ -55,7 +56,13 @@ func main() {
 	}
 
 	simulation := invasion.Simulation{Planet: planet, AlienOrderRandom: *alienOrderRandom}
-	eventLog := invasion.EventPrinter
+	var eventLog invasion.EventLogger
+	if *logCitiesOnly {
+		eventLog = &invasion.OfficialLogger{}
+	} else {
+		eventLog = invasion.EventPrinter
+	}
+
 	// Seed the randomness
 	rand.Seed(time.Now().UnixNano())
 
