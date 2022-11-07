@@ -100,3 +100,21 @@ func TestFight(t *testing.T) {
 	require.Equal(t, 9, len(log.Events))
 	require.Equal(t, "B has been destroyed by alien 2 and alien 1", log.Events[4].String())
 }
+
+// 10 cities, 2000 aliens, no aliens (or cities) survive the landing
+func TestHeavyBombardment(t *testing.T) {
+	planet, err := invasion.ParsePlanet(strings.NewReader("A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\n"))
+	require.NoError(t, err)
+
+	sim := NewSimulation(planet)
+	log := &invasion.EventCollector{}
+
+	// This test would be technically "flaky" if we didn't seed the random number generator.
+	// Though the probability of a failure is less than 1 in 10^100. :)
+	rand.Seed(0)
+	sim.PlaceAliens(2000, log)
+
+	require.Equal(t, 0, len(planet.Aliens))
+	require.Less(t, 4000, len(log.Events))
+	require.Equal(t, "alien 2000 dies from radiation", log.Events[len(log.Events)-1].String())
+}
