@@ -19,4 +19,13 @@ func TestPlanetFromPreParsedPlanet(t *testing.T) {
 
 	require.Equal(t, preParsedPlanet, planet.PlanetToPreParsedPlanet())
 	require.Equal(t, "A north=B east=C\nB south=A\nC west=A\n", planet.ToString())
+
+	// Test unidirectional connections
+	preParsedPlanet = invasion.PreParsedPlanet{
+		{Name: "A", Neighbors: []invasion.Connection{{"north", "B"}}},
+		{Name: "B", Neighbors: []invasion.Connection{}},
+	}
+	planet = invasion.PlanetFromPreParsedPlanet(preParsedPlanet)
+	require.Equal(t, preParsedPlanet, planet.PlanetToPreParsedPlanet())
+	require.Equal(t, "A north=B\nB\n", planet.ToString())
 }

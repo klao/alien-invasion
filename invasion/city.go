@@ -46,6 +46,7 @@ func (c *City) ToString() string {
 func (c *City) CityToPreParsedCity() PreParsedCity {
 	var preParsedCity PreParsedCity
 	preParsedCity.Name = c.Name
+	preParsedCity.Neighbors = make([]Connection, 0, len(c.Neighbors))
 	for _, neighbor := range c.Neighbors {
 		preParsedCity.Neighbors = append(preParsedCity.Neighbors, Connection{
 			Direction: c.NeighborDirections[neighbor.Name],

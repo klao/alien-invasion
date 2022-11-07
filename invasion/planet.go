@@ -55,6 +55,7 @@ func PlanetFromPreParsedPlanet(preParsedPlanet PreParsedPlanet) *Planet {
 // For testing purposes only
 func (p *Planet) PlanetToPreParsedPlanet() PreParsedPlanet {
 	var preParsedPlanet PreParsedPlanet
+	preParsedPlanet = make([]PreParsedCity, 0, len(p.Cities))
 	for _, city := range p.Cities {
 		preParsedPlanet = append(preParsedPlanet, city.CityToPreParsedCity())
 	}
