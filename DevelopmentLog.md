@@ -35,3 +35,27 @@ To make test driven development easier I decided to split input parsing in two s
 2. Create the graph structure from the pre-parsed structure.
 
 Both phases should be quite straightforward and easy to test.
+
+# Aliens
+
+Alien behavior is relatively straightforward, but we need to iron out a few unclear parts of the
+specification.
+
+The assignment talks about "each iteration", which suggests that the movement of the aliens is
+(semi-) synchronous. This is easy to simulate, but we still need to decide if within one round
+they move one-by-one or all at the same time. That is, do we need to test for "collisions" after
+individual moves or only at the end of a round.
+
+The first option is easier to implement, since in that case only one alien can be in a city at any
+time (as soon as another moves in, it's immediately destroyed.) If we only test at the end of a
+round, more than two aliens can end up in a city randomly… Thus, I will implement the first
+option, and maybe later add a synchronous possibility.
+
+There is also the question of the order the aliens move within one round, it could be either stable
+(always the same) or random. It's easy to implement both, so I will do that.
+
+The assignment specifies that the simulation stops after every alien moves at least 10000 times
+(or all are dead), but an alien can get stuck in an isolated city (all neighbors get destroyed.)
+I will assume that this alien also "moves" in every round, just ends up in the same place where
+it started. This makes the end condition very simple: we just simulate for 10000 rounds or until
+every alien is dead.
