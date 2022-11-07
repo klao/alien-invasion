@@ -21,6 +21,8 @@ func (p *Planet) Format(w io.Writer) {
 	}
 }
 
+// This is not `String()` on purpose, to not implement the `fmt.Stringer` interface to allow
+// debugging with `fmt.Printf("%v", planet)`.
 func (p *Planet) ToString() string {
 	var buf strings.Builder
 	p.Format(&buf)

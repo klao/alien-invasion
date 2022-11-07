@@ -8,5 +8,5 @@ type Alien struct {
 }
 
 func (a *Alien) Name() string {
-	return fmt.Sprint(a.Id + 1)
+	return fmt.Sprintf("alien %d", a.Id+1)
 }
