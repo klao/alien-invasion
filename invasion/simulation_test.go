@@ -1,6 +1,7 @@
 package invasion_test
 
 import (
+	"math/rand"
 	"strings"
 	"testing"
 
@@ -8,6 +9,10 @@ import (
 
 	"github.com/stretchr/testify/require"
 )
+
+func NewSimulation(planet *invasion.Planet) invasion.Simulation {
+	return invasion.Simulation{planet, false}
+}
 
 func TestMoveAlien(t *testing.T) {
 	// Trapped alien
@@ -17,7 +22,7 @@ func TestMoveAlien(t *testing.T) {
 	alien := &invasion.Alien{Id: 0, City: planet.Cities[0]}
 	planet.Aliens[0] = alien
 
-	sim := invasion.Simulation{planet}
+	sim := NewSimulation(planet)
 	log := invasion.EventCollector{}
 	sim.MoveAlien(alien, &log)
 
@@ -32,7 +37,7 @@ func TestMoveAlien(t *testing.T) {
 	alien = &invasion.Alien{Id: 0, City: planet.Cities[0]}
 	planet.Aliens[0] = alien
 
-	sim = invasion.Simulation{planet}
+	sim = NewSimulation(planet)
 	log = invasion.EventCollector{}
 	sim.MoveAlien(alien, &log)
 
@@ -46,7 +51,7 @@ func TestPlaceAlien(t *testing.T) {
 	planet, err := invasion.ParsePlanet(strings.NewReader("A\n"))
 	require.NoError(t, err)
 
-	sim := invasion.Simulation{planet}
+	sim := NewSimulation(planet)
 	log := invasion.EventCollector{}
 	sim.PlaceAlien(0, &log)
 
@@ -64,7 +69,6 @@ func TestPlaceAlien(t *testing.T) {
 	require.Equal(t, "alien 2 dies in a fight", log.Events[3].String())
 	require.Equal(t, "alien 1 dies in a fight", log.Events[4].String())
 	require.Equal(t, 0, len(planet.Aliens))
-	// require.Equal(t, nil, planet.Cities[0].Visitor)
 	require.Nil(t, planet.Cities[0].Visitor)
 
 	// Third alien dies immediately in the destroyed city
@@ -74,4 +78,23 @@ func TestPlaceAlien(t *testing.T) {
 	require.Equal(t, "alien 3 descends on A", log.Events[5].String())
 	require.Equal(t, "alien 3 dies from radiation", log.Events[6].String())
 	require.Equal(t, 0, len(planet.Aliens))
+}
+
+// This is not a proper unit test, more of a quick sanity check of the current implementation.
+// Any major changes to the simulation logic will require an update of this test.
+func TestFight(t *testing.T) {
+	planet, err := invasion.ParsePlanet(strings.NewReader("A east=B\nB west=A\n"))
+	require.NoError(t, err)
+
+	sim := NewSimulation(planet)
+	sim.AlienOrderRandom = true
+	log := &invasion.EventCollector{}
+
+	rand.Seed(4)
+	sim.PlaceAliens(2, log)
+	sim.Run(1, log)
+
+	require.Equal(t, 0, len(planet.Aliens))
+	require.Equal(t, 9, len(log.Events))
+	require.Equal(t, "B has been destroyed by alien 2 and alien 1", log.Events[4].String())
 }

@@ -1,9 +1,14 @@
 package invasion
 
-import "math/rand"
+import (
+	"fmt"
+	"math/rand"
+	"sort"
+)
 
 type Simulation struct {
 	*Planet
+	AlienOrderRandom bool
 }
 
 func (s *Simulation) RemoveAlien(alien *Alien) {
@@ -70,4 +75,46 @@ func (s *Simulation) PlaceAliens(n int, log EventLogger) {
 	for i := 0; i < n; i++ {
 		s.PlaceAlien(i, log)
 	}
+}
+
+func (s *Simulation) RunRound(round int, log EventLogger) {
+	log.LogEvent(&GenericEvent{fmt.Sprintf("Round %d start", round)})
+
+	// Order aliens for the round
+	ids := make([]int, 0, len(s.Aliens))
+	for alienId := range s.Aliens {
+		ids = append(ids, alienId)
+	}
+	sort.Ints(ids)
+	if s.AlienOrderRandom {
+		rand.Shuffle(len(ids), func(i, j int) {
+			ids[i], ids[j] = ids[j], ids[i]
+		})
+	}
+
+	for _, alienId := range ids {
+		alien, ok := s.Aliens[alienId]
+		if !ok {
+			continue
+		}
+		s.MoveAlien(alien, log)
+	}
+
+	log.LogEvent(&GenericEvent{fmt.Sprintf("Round %d end", round)})
+}
+
+func (s *Simulation) Run(rounds int, log EventLogger) {
+	if len(s.Aliens) == 0 {
+		log.LogEvent(&GenericEvent{"All aliens are dead or trapped"})
+		return
+	}
+
+	for i := 0; i < rounds; i++ {
+		s.RunRound(i+1, log)
+		if len(s.Aliens) == 0 {
+			log.LogEvent(&GenericEvent{"All aliens are dead or trapped"})
+			return
+		}
+	}
+	log.LogEvent(&GenericEvent{"Maximum number of rounds reached"})
 }
