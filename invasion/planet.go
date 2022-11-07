@@ -52,6 +52,7 @@ func PlanetFromPreParsedPlanet(preParsedPlanet PreParsedPlanet) *Planet {
 		}
 	}
 
+	planet.Aliens = make(map[int]*Alien)
 	return planet
 }
 

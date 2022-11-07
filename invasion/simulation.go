@@ -1,5 +1,7 @@
 package invasion
 
+import "math/rand"
+
 type Simulation struct {
 	*Planet
 }
@@ -23,6 +25,10 @@ func (s *Simulation) MoveAlien(alien *Alien, log EventLogger) {
 	}
 
 	log.LogEvent(&AlienMoveEvent{alien.Name(), oldCity.Name, newCity.Name})
+	s.moveAlienToCity(alien, newCity, log)
+}
+
+func (s *Simulation) moveAlienToCity(alien *Alien, newCity *City, log EventLogger) {
 	alien.City = newCity
 
 	other := newCity.Visitor
@@ -38,4 +44,30 @@ func (s *Simulation) MoveAlien(alien *Alien, log EventLogger) {
 	}
 
 	newCity.Visitor = alien
+}
+
+func (s *Simulation) PlaceAlien(id int, log EventLogger) {
+	alien := &Alien{id, nil}
+	s.Aliens[id] = alien
+
+	i := rand.Intn(len(s.Cities))
+	city := s.Cities[i]
+
+	log.LogEvent(&AlienDescentEvent{alien.Name(), city.Name})
+
+	if city.Destroyed {
+		log.LogEvent(&AlienDiesEvent{alien.Name(), AlienDeathReasonRadiation})
+		// Record that the alien died in that city for the sake of completeness
+		alien.City = city
+		s.RemoveAlien(alien)
+		return
+	}
+
+	s.moveAlienToCity(alien, city, log)
+}
+
+func (s *Simulation) PlaceAliens(n int, log EventLogger) {
+	for i := 0; i < n; i++ {
+		s.PlaceAlien(i, log)
+	}
 }
