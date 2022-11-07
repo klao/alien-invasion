@@ -19,3 +19,9 @@ simple direct solutions, which could be extended if desired. For example:
   need to bake in the east-west, north-south correspondence etc.
 - Remark about naming the aliens: Maybe look up the library that generates rememberable names for
   Docker containers. It would be fun to have NaughtyEisteins running around ruining cities. :D
+
+# Basic types
+
+There is a lot of potential for abstraction in this assignment. But abstraction, in particular
+using interfaces instead of concrete types can be detrimental in the early stages of development.
+So, I'm going to use simple concrete types as long as it makes sense.
