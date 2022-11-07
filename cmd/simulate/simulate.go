@@ -17,6 +17,7 @@ const usageString = "Usage: simulate [flags] <map file> <number of aliens>\n\n"
 
 var alienOrderRandom = flag.Bool("order_random", false, "Order of alien moves in each round is random")
 var logCitiesOnly = flag.Bool("log_cities_only", false, "Only log city destruction events")
+var friendlyAliens = flag.Bool("friendly_aliens", false, "Give aliens names to seem more friendly")
 
 func init() {
 	flag.Usage = func() {
@@ -55,7 +56,12 @@ func main() {
 		panic(err)
 	}
 
-	simulation := invasion.Simulation{Planet: planet, AlienOrderRandom: *alienOrderRandom}
+	simulation := invasion.Simulation{
+		Planet:           planet,
+		AlienOrderRandom: *alienOrderRandom,
+		FriendlyAliens:   *friendlyAliens,
+	}
+
 	var eventLog invasion.EventLogger
 	if *logCitiesOnly {
 		eventLog = &invasion.OfficialLogger{}

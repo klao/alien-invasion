@@ -11,7 +11,9 @@ import (
 )
 
 func NewSimulation(planet *invasion.Planet) invasion.Simulation {
-	return invasion.Simulation{planet, false}
+	return invasion.Simulation{
+		Planet: planet,
+	}
 }
 
 func TestMoveAlien(t *testing.T) {
@@ -19,7 +21,8 @@ func TestMoveAlien(t *testing.T) {
 	planet, err := invasion.ParsePlanet(strings.NewReader("A"))
 	require.NoError(t, err)
 
-	alien := &invasion.Alien{Id: 0, City: planet.Cities[0]}
+	alien := invasion.NewAlien(0, false)
+	alien.City = planet.Cities[0]
 	planet.Aliens[0] = alien
 
 	sim := NewSimulation(planet)
@@ -34,7 +37,8 @@ func TestMoveAlien(t *testing.T) {
 	planet, err = invasion.ParsePlanet(strings.NewReader("A north=B\nB south=A\n"))
 	require.NoError(t, err)
 
-	alien = &invasion.Alien{Id: 0, City: planet.Cities[0]}
+	alien = invasion.NewAlien(0, false)
+	alien.City = planet.Cities[0]
 	planet.Aliens[0] = alien
 	planet.Cities[0].Visitor = alien
 

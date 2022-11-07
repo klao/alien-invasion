@@ -9,6 +9,7 @@ import (
 type Simulation struct {
 	*Planet
 	AlienOrderRandom bool
+	FriendlyAliens   bool
 }
 
 func (s *Simulation) RemoveAlien(alien *Alien) {
@@ -53,7 +54,7 @@ func (s *Simulation) moveAlienToCity(alien *Alien, newCity *City, log EventLogge
 }
 
 func (s *Simulation) PlaceAlien(id int, log EventLogger) {
-	alien := &Alien{id, nil}
+	alien := NewAlien(id, s.FriendlyAliens)
 	s.Aliens[id] = alien
 
 	i := rand.Intn(len(s.Cities))
