@@ -107,3 +107,12 @@ func (e *AlienDiesEvent) String() string {
 		panic("Unknown alien death reason")
 	}
 }
+
+type AlienTrappedEvent struct {
+	Alien string
+	City  string
+}
+
+func (e *AlienTrappedEvent) String() string {
+	return e.Alien + " is trapped in " + e.City
+}
