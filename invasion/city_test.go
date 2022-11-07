@@ -26,3 +26,20 @@ func TestCityToString(t *testing.T) {
 	city.Neighbors = nil
 	require.Equal(t, "A", city.ToString())
 }
+
+func TestToPreParseCity(t *testing.T) {
+	preParsedCity, err := invasion.PreParseCity("A north=B east=C")
+	require.NoError(t, err)
+	require.Equal(t, invasion.PreParsedCity{
+		Name: "A",
+		Neighbors: []invasion.Connection{
+			{"north", "B"},
+			{"east", "C"},
+		},
+	}, preParsedCity)
+
+	// Test for invalid input
+	_, err = invasion.PreParseCity("A north=B east=C west")
+	require.Error(t, err)
+	require.Equal(t, "invalid connection \"west\"", err.Error())
+}

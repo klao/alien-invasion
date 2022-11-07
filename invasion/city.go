@@ -1,6 +1,7 @@
 package invasion
 
 import (
+	"fmt"
 	"io"
 	"strings"
 )
@@ -54,4 +55,20 @@ func (c *City) CityToPreParsedCity() PreParsedCity {
 		})
 	}
 	return preParsedCity
+}
+
+func PreParseCity(line string) (PreParsedCity, error) {
+	var preParsedCity PreParsedCity
+	words := strings.Fields(line)
+	preParsedCity.Name = words[0]
+	preParsedCity.Neighbors = make([]Connection, 0, len(words)-1)
+	for _, word := range words[1:] {
+		connParts := strings.SplitN(word, "=", 2)
+		if len(connParts) != 2 {
+			return PreParsedCity{}, fmt.Errorf("invalid connection %q", word)
+		}
+		preParsedCity.Neighbors = append(preParsedCity.Neighbors,
+			Connection{connParts[0], connParts[1]})
+	}
+	return preParsedCity, nil
 }

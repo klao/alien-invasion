@@ -1,6 +1,7 @@
 package invasion
 
 import (
+	"bufio"
 	"io"
 	"strings"
 )
@@ -60,4 +61,30 @@ func (p *Planet) PlanetToPreParsedPlanet() PreParsedPlanet {
 		preParsedPlanet = append(preParsedPlanet, city.CityToPreParsedCity())
 	}
 	return preParsedPlanet
+}
+
+func PreParsePlanet(r io.Reader) (PreParsedPlanet, error) {
+	var preParsedPlanet PreParsedPlanet
+
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		preParsedCity, err := PreParseCity(scanner.Text())
+		if err != nil {
+			return nil, err
+		}
+		preParsedPlanet = append(preParsedPlanet, preParsedCity)
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	return preParsedPlanet, nil
+}
+
+func ParsePlanet(r io.Reader) (*Planet, error) {
+	preParsedPlanet, err := PreParsePlanet(r)
+	if err != nil {
+		return nil, err
+	}
+	return PlanetFromPreParsedPlanet(preParsedPlanet), nil
 }

@@ -25,3 +25,13 @@ simple direct solutions, which could be extended if desired. For example:
 There is a lot of potential for abstraction in this assignment. But abstraction, in particular
 using interfaces instead of concrete types can be detrimental in the early stages of development.
 So, I'm going to use simple concrete types as long as it makes sense.
+
+# Parsing
+
+To make test driven development easier I decided to split input parsing in two stages:
+
+1. Parse input stream into very simple structured data (basically just a slice of words and
+   word pairs).
+2. Create the graph structure from the pre-parsed structure.
+
+Both phases should be quite straightforward and easy to test.
