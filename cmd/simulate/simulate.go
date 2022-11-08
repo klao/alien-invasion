@@ -11,7 +11,7 @@ import (
 	"github.com/klao/alien-invasion/invasion"
 )
 
-const numberOfRounds = 100
+const numberOfRounds = 10000
 
 const usageString = "Usage: simulate [flags] <map file> <number of aliens>\n\n"
 
